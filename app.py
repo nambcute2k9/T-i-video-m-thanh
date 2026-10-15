@@ -35,7 +35,39 @@ def get_ffmpeg_path() -> Optional[str]:
             return exe
     except Exception:
         pass
+def get_cookie_file() -> Optional[str]:
+    # 1. Kiểm tra biến môi trường YOUTUBE_COOKIES (dành cho Render/Cloud)
+    env_cookies = os.environ.get("YOUTUBE_COOKIES")
+    if env_cookies and len(env_cookies.strip()) > 10:
+        temp_cookie_path = os.path.join(tempfile.gettempdir(), "youtube_cookies.txt")
+        try:
+            with open(temp_cookie_path, "w", encoding="utf-8") as f:
+                f.write(env_cookies.strip())
+            return temp_cookie_path
+        except Exception as e:
+            print(f"Error writing env cookies: {e}")
+
+    # 2. Kiểm tra file cookies.txt trong thư mục dự án
+    local_cookie = os.path.join(os.path.dirname(__file__), "cookies.txt")
+    if os.path.exists(local_cookie) and os.path.getsize(local_cookie) > 0:
+        return local_cookie
+
     return None
+
+def get_base_ydl_opts() -> dict:
+    opts = {
+        'quiet': True,
+        'no_warnings': True,
+        'extractor_args': {
+            'youtube': {
+                'player_client': ['ios', 'android', 'mweb'],
+            }
+        }
+    }
+    cookie_path = get_cookie_file()
+    if cookie_path:
+        opts['cookiefile'] = cookie_path
+    return opts
 
 def cleanup_file(path: str):
     try:
@@ -80,12 +112,11 @@ class InfoRequest(BaseModel):
 @app.get("/api/search")
 def search_youtube(q: str = Query(..., min_length=1)):
     """Tìm kiếm video YouTube trực tiếp không cần API Key"""
-    ydl_opts = {
+    ydl_opts = get_base_ydl_opts()
+    ydl_opts.update({
         'extract_flat': True,
-        'quiet': True,
-        'no_warnings': True,
         'skip_download': True,
-    }
+    })
     
     query = f"ytsearch15:{q}"
     try:
@@ -125,11 +156,10 @@ def get_media_info(req: InfoRequest):
     if not url:
         raise HTTPException(status_code=400, detail="Vui lòng nhập đường link")
     
-    ydl_opts = {
-        'quiet': True,
-        'no_warnings': True,
+    ydl_opts = get_base_ydl_opts()
+    ydl_opts.update({
         'skip_download': True,
-    }
+    })
     
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -201,12 +231,11 @@ def download_media(
     # Cấu hình format yt-dlp
     out_tmpl = os.path.join(TEMP_DIR, f"{clean_title}_%(id)s_%(epoch)s.%(ext)s")
     
-    ydl_opts = {
-        'quiet': True,
-        'no_warnings': True,
+    ydl_opts = get_base_ydl_opts()
+    ydl_opts.update({
         'outtmpl': out_tmpl,
         'restrictfilenames': True,
-    }
+    })
     if has_ffmpeg:
         ydl_opts['ffmpeg_location'] = ffmpeg_path
     
