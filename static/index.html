@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>iDownloader Pro - Tải Video Đa Nền Tảng</title>
+  
+  <!-- Apple iOS PWA Meta Tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="iDownloader">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+  
+  <!-- Manifest -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#090D16">
+  
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+  <!-- Top iOS Header -->
+  <header class="ios-header">
+    <div class="logo-area">
+      <div class="app-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+      </div>
+      <span class="app-title">iDownloader</span>
+    </div>
+    <button class="help-btn" id="openTutorialBtn" title="Hướng dẫn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+        <line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
+    </button>
+  </header>
+
+  <!-- iOS Tip Banner -->
+  <div class="ios-tip-banner" id="tipBanner">
+    <div class="tip-content">
+      💡 <strong>Mẹo cho iPhone:</strong> Mở bằng Safari rồi bấm nút <strong>Chia sẻ ➔ Thêm vào MH chính</strong> để dùng như App độc lập!
+    </div>
+    <button class="tip-close" id="closeTipBtn">&times;</button>
+  </div>
+
+  <main class="container">
+    
+    <!-- TAB 1: DÁN LINK ĐA NỀN TẢNG -->
+    <section class="tab-page active" id="tab-paste">
+      <div class="paste-box">
+        <div class="box-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+          </svg>
+          Dán đường link cần tải
+        </div>
+
+        <div class="input-group">
+          <input type="url" id="urlInput" class="ios-input" placeholder="Dán link TikTok, YouTube, FB, Instagram..." autocomplete="off">
+          <button class="clear-btn" id="clearUrlBtn">&times;</button>
+        </div>
+
+        <div class="action-buttons">
+          <button class="btn-secondary" id="pasteClipboardBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+              <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+            </svg>
+            Dán từ bộ nhớ
+          </button>
+
+          <button class="btn-primary" id="analyzeUrlBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"/>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            Phân tích link
+          </button>
+        </div>
+
+        <div class="platform-badges">
+          <span class="platform-pill">🎵 TikTok (Không logo)</span>
+          <span class="platform-pill">▶️ YouTube 4K/MP3</span>
+          <span class="platform-pill">📸 Instagram Reels</span>
+          <span class="platform-pill">📘 Facebook HD</span>
+          <span class="platform-pill">🐦 X / Twitter</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: TÌM KIẾM YOUTUBE TRỰC TIẾP -->
+    <section class="tab-page" id="tab-search">
+      <div class="search-wrapper">
+        <div class="search-input-box">
+          <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input type="search" id="ytSearchInput" class="search-input" placeholder="Tìm video hoặc bài hát trên YouTube..." enterkeyhint="search">
+        </div>
+      </div>
+
+      <div id="searchResults" class="video-list">
+        <div class="state-box" id="searchInitialState">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 10px; opacity: 0.6;">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <p>Nhập tên bài hát hoặc video để tìm kiếm trực tiếp trên YouTube</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- iOS Bottom Sheet: Chọn định dạng tải -->
+  <div class="modal-overlay" id="formatModal">
+    <div class="modal-sheet">
+      <div class="drag-handle"></div>
+
+      <div class="sheet-header">
+        <img id="modalThumb" class="sheet-thumb" src="" alt="Thumbnail">
+        <div class="sheet-meta">
+          <h3 id="modalTitle">Tiêu đề video</h3>
+          <p id="modalAuthor">Tác giả • 00:00</p>
+        </div>
+      </div>
+
+      <div class="format-group-title">🎬 Tải Video Chất lượng cao</div>
+      <div id="videoFormatsList"></div>
+
+      <div class="format-group-title">🎵 Tải Âm thanh / Nhạc MP3</div>
+      <div id="audioFormatsList"></div>
+
+      <div style="margin-top: 18px; padding: 12px; border-radius: 12px; background: rgba(255,255,255,0.04); font-size: 12px; color: #94a3b8; line-height: 1.4;">
+        📲 <strong>Lưu ý trên Safari iPhone:</strong> Bấm chọn định dạng ➔ Safari sẽ hỏi "Bạn có muốn tải về không?" ➔ Bấm <strong>Tải về</strong> ➔ Vào danh sách tải của Safari ➔ Bấm nút <strong>Chia sẻ ➔ Lưu video</strong> để vào Cuộn Camera.
+      </div>
+    </div>
+  </div>
+
+  <!-- Tutorial Modal -->
+  <div class="modal-overlay" id="tutorialModal">
+    <div class="modal-sheet">
+      <div class="drag-handle"></div>
+      <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Cài đặt vào iPhone làm App</h3>
+      <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">Biến trang này thành App độc lập không bao giờ hết hạn:</p>
+
+      <div class="tutorial-steps">
+        <div class="tutorial-step">
+          <div class="step-number">1</div>
+          <div class="step-text">Mở liên kết này trong trình duyệt <strong>Safari</strong> trên iPhone của bạn.</div>
+        </div>
+        <div class="tutorial-step">
+          <div class="step-number">2</div>
+          <div class="step-text">Bấm vào biểu tượng <strong>Chia sẻ (nút hình vuông có mũi tên trỏ lên)</strong> ở thanh dưới cùng Safari.</div>
+        </div>
+        <div class="tutorial-step">
+          <div class="step-number">3</div>
+          <div class="step-text">Cuộn xuống và chọn <strong>"Thêm vào MH chính" (Add to Home Screen)</strong> ➔ Bấm <strong>Thêm</strong>.</div>
+        </div>
+      </div>
+
+      <button class="btn-primary" id="closeTutorialModalBtn" style="margin-top: 10px; width: 100%;">Đã hiểu</button>
+    </div>
+  </div>
+
+  <!-- iOS Bottom Tab Bar -->
+  <nav class="ios-tab-bar">
+    <button class="tab-btn active" data-tab="tab-paste">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+      </svg>
+      <span>Dán Link</span>
+    </button>
+
+    <button class="tab-btn" data-tab="tab-search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <circle cx="11" cy="11" r="8"/>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <span>Tìm YouTube</span>
+    </button>
+  </nav>
+
+  <script src="/app.js"></script>
+</body>
+</html>
